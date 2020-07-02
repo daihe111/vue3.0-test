@@ -1,12 +1,38 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <p @click="handleAdd">count: {{ count }}</p>
+      <p>{{ bigCount }}</p>
     </div>
-    <router-view/>
   </div>
 </template>
+
+<script>
+  import { ref, computed } from 'vue';
+  import { effect } from '@vue/reactivity';
+
+  export default {
+    setup() {
+      const count = ref(1); // B -> dep
+      // A -> dep
+      const bigCount = computed(/* B */() => {
+        return count.value + 10;
+      });
+      const handleAdd = () => {
+        count.value++;
+      };
+      // 此时activeEffect是A
+      effect((/* A */) => {
+        alert(bigCount.value);
+      });
+      return {
+        count,
+        bigCount,
+        handleAdd
+      };
+    }
+  }
+</script>
 
 <style lang="less">
 #app {

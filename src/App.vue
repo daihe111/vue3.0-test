@@ -11,6 +11,16 @@
   import { ref, computed } from 'vue';
   import { effect } from '@vue/reactivity';
 
+  // 侦听值变化执行getter，应该track到对应值的依赖中，根据immediate判断
+  // watch effect是否为立即执行，非立即执行需要scheduler来控制时机，
+  // deep控制是否深度监听
+  // 伪代码：
+  // effect(callback, { lazy: !immediate })
+  // proxy getter -> track
+  // 调用方式
+  // const res = watch(val, (newVal) => {
+  //   // your code
+  // }, options);
   export default {
     setup() {
       const count = ref(1); // B -> dep
